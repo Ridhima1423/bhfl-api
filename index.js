@@ -1,5 +1,4 @@
 const express = require("express");
-
 const cors = require("cors");
 
 const app = express();
@@ -8,45 +7,38 @@ app.use(express.json());
 
 const EMAIL = "ridhima1424.be23@chitkarauniversity.edu.in";
 
-app.get("/health", (req, res) =>{
+app.get("/", (req, res) => {
   res.status(200).json({
     is_success: true,
     official_email: EMAIL
   });
 });
 
-app.post("/bfhl", (req, res) =>{
+app.post("/bfhl", (req, res) => {
   try {
-    const input = req.body;
-    const keys = Object.keys(input);
+    const body = req.body;
+    const keys = Object.keys(body);
 
-    if(keys.length !== 1 || keys[0] !== "fibonacci"){
+    if (keys.length !== 1 || keys[0] !== "fibonacci") {
       return res.status(400).json({
-        is_success: false,
-        error: "Invalid request"
+        is_success: false
       });
     }
 
-    const n = input.fibonacci;
+    const n = body.fibonacci;
 
-    if(typeof n !== "number" || n <= 0){
+    if (typeof n !== "number" || n <= 0) {
       return res.status(400).json({
-
-        is_success: false,
-        error: "Invalid input value"
+        is_success: false
       });
     }
 
     let result = [];
-         let first = 0;
-    let second =  1;
+    let a = 0, b = 1;
 
-    for (let i = 0; i < n; i++){
-      result.push(first);
-      let next = first + second;
-
-      first = second;
-      second = next;
+    for (let i = 0; i < n; i++) {
+      result.push(a);
+      [a, b] = [b, a + b];
     }
 
     res.status(200).json({
@@ -55,16 +47,11 @@ app.post("/bfhl", (req, res) =>{
       data: result
     });
 
-  } 
-  catch{
+  } catch {
     res.status(500).json({
-      is_success: false,
-      error: "Something went wrong"
+      is_success: false
     });
   }
 });
 
-const PORT =  5000;
-app.listen(PORT,() =>{
-  console.log(`Server running on port ${PORT}`);
-});
+module.exports = app;
